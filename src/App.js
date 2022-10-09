@@ -9,7 +9,7 @@ import "./App.css";
 // Please append it to all of your API requests,
 // OMDb API: http://www.omdbapi.com/?i=tt3896198&apikey=9e77328c
 
-const API_URL = "http://www.omdbapi.com/?i=tt3896198&apikey=9e77328c";
+const API_URL = "https://www.omdbapi.com/?i=tt3896198&apikey=9e77328c";
 
 function App() {
   const [movies, setMovies] = useState([]);
