@@ -1,32 +1,65 @@
-// import logo from "./logo.svg";
+import { useState } from "react";
+import MovieCard from "./MovieCard";
+import SearhIcon from "./search.svg";
+
 import "./App.css";
 
-function Person(props) {
-  return (
-    <>
-      <h2>Hello {props.name}</h2>
-    </>
-  );
-}
+// omdbapi
+// Here is your key: 9e77328c
+// Please append it to all of your API requests,
+// OMDb API: http://www.omdbapi.com/?i=tt3896198&apikey=9e77328c
+
+const API_URL = "http://www.omdbapi.com/?i=tt3896198&apikey=9e77328c";
 
 function App() {
-  const isUserLoggedIn = true;
+  const [movies, setMovies] = useState([]);
+  const [searchTerm, setSearchTerm] = useState([]);
+
+  const searchMovies = async (title) => {
+    // api fetch call with title
+    const response = await fetch(`${API_URL}&s=${title}`);
+    // getting the data to json
+    const data = await response.json();
+
+    setMovies(data.Search);
+    // console.log(data.Search);
+    // console.log(response);
+  };
 
   return (
-    <div className="App">
-      <header className="App-header">
-        {isUserLoggedIn ? (
-          <>
-            <h1>You are logged in!</h1>
-            <Person name="John" />
-            <Person />
-          </>
-        ) : (
-          <>
-            <h1>not logged in</h1>
-          </>
-        )}
-      </header>
+    <div className="app">
+      <h1>MovieWorld</h1>
+
+      <div className="search">
+        <input
+          value={searchTerm}
+          placeholder="Search for movies"
+          onChange={(e) => setSearchTerm(e.target.value)}
+          // added onkey down search
+          onKeyPress={(e) => {
+            if (e.key === "Enter") {
+              searchMovies(searchTerm);
+            }
+          }}
+        />
+        <img
+          src={SearhIcon}
+          alt="Search"
+          onClick={() => searchMovies(searchTerm)}
+        />
+      </div>
+
+      {movies?.length > 0 ? (
+        <div className="container">
+          {movies.map((movie) => (
+            <MovieCard movie={movie} key={movie.imdbID} />
+          ))}
+        </div>
+      ) : (
+        <div className="empty">
+          <h2>No movies found</h2>
+        </div>
+      )}
     </div>
   );
 }
