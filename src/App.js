@@ -16,14 +16,29 @@ function App() {
   const [searchTerm, setSearchTerm] = useState([]);
 
   const searchMovies = async (title) => {
-    // api fetch call with title
-    const response = await fetch(`${API_URL}&s=${title}`);
-    // getting the data to json
-    const data = await response.json();
+    const moviesArray = [];
+    const allResultsArray = [];
+    let pageCount = 1;
+    // max 3 pages to reduce calls on dev env
+    while (pageCount <= 3) {
+      // api search call with title and page =1
+      const response = await fetch(`${API_URL}&s=${title}&page=${pageCount}`);
+      // getting the data to json
+      const data = await response.json();
+      // each call pushes data to moviearray
+      moviesArray.push(data.Search);
+      // nextpage
+      pageCount++;
+    }
 
-    setMovies(data.Search);
-    // console.log(data.Search);
-    // console.log(response);
+    // creates allresults array from all data of moviesarray
+    moviesArray.forEach((item) => {
+      item.forEach((subitem) => {
+        allResultsArray.push(subitem);
+      });
+    });
+
+    setMovies(allResultsArray);
   };
 
   return (
